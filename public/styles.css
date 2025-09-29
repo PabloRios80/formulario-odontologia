@@ -1,0 +1,12 @@
+/* styles.css */
+
+/* Estilo para enmarcar los títulos de los campos (versión 2) */
+label {
+    background-color: #EBF8FF; /* Fondo azul muy claro */
+    color: #2C5282;          /* Texto azul oscuro */
+    padding: 8px 12px;
+    border: 2px solid #3182CE; /* Borde azul en los 4 lados */
+    border-radius: 6px;      /* Bordes un poco más redondeados */
+    display: block;
+    margin-bottom: 4px;
+}
