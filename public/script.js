@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let currentStep = 1;
     const totalSteps = 5; // Total de pasos que tendremos
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbytqNMsnolHJY_CbHdIRIgGHDzmvcUlZBQ3TzPZ3fFNHCKx4hWiB-aEmOjhRnZ3U-vz/exec";
+    const SCRIPT_URL = "/guardar-odontologia";
 
     // --- FUNCIONES ---
 
