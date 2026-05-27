@@ -129,6 +129,85 @@ form.addEventListener('submit', function(e) {
     });
 });
 
+// ── VERIFICAR DNI + ALERTAS ODONTOLOGÍA ──
+const dniInput = document.getElementById('dni');
+dniInput.addEventListener('blur', async function() {
+    const dni = this.value.trim();
+    if (!/^\d{7,8}$/.test(dni)) return;
+
+    // Mensaje de verificación
+    let msgEl = document.getElementById('dniMsg');
+    if (!msgEl) {
+        msgEl = document.createElement('div');
+        msgEl.id = 'dniMsg';
+        msgEl.style.cssText = 'margin-top:8px; padding:10px 14px; border-radius:8px; font-size:13px; font-weight:500;';
+        dniInput.parentNode.appendChild(msgEl);
+    }
+    msgEl.style.cssText += 'background:#f8fafc; color:#64748b; border:1px solid #e2e8f0;';
+    msgEl.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:6px"></i>Verificando afiliación...';
+
+    try {
+        // 1. Verificar IAPOS
+        const res = await fetch('/verificar-afiliado/' + dni);
+        const data = await res.json();
+
+        if (!data.esActivo) {
+            msgEl.style.cssText = 'margin-top:8px; padding:10px 14px; border-radius:8px; font-size:13px; font-weight:500; background:#fef2f2; color:#dc2626; border:1px solid #fecaca;';
+            msgEl.innerHTML = '<i class="fas fa-times-circle" style="margin-right:6px"></i>DNI no corresponde a un afiliado activo de IAPOS.';
+            return;
+        }
+
+        msgEl.style.cssText = 'margin-top:8px; padding:10px 14px; border-radius:8px; font-size:13px; font-weight:500; background:#f0fdf4; color:#16a34a; border:1px solid #bbf7d0;';
+        msgEl.innerHTML = '<i class="fas fa-check-circle" style="margin-right:6px"></i>Afiliado activo — ' + (data.nombre || '') + (data.localidad ? ' · ' + data.localidad : '');
+
+        // Autocompletar apellido y nombre
+        if (data.nombre) {
+            const partes = data.nombre.trim().split(',');
+            if (partes.length >= 2) {
+                if (!document.getElementById('apellido').value) document.getElementById('apellido').value = partes[0].trim();
+                if (!document.getElementById('nombre').value) document.getElementById('nombre').value = partes[1].trim();
+            }
+        }
+        if (data.edad) document.getElementById('edad').value = data.edad;
+        if (data.sexo) document.getElementById('sexo').value = data.sexo === '2' ? 'Femenino' : 'Masculino';
+
+        // 2. Cargar alertas clínicas relevantes para odontología
+        const alertasRes = await fetch('/cargar-datos-paciente', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ dni })
+        });
+        const alertasData = await alertasRes.json();
+
+        const camposOdonto = ['Control_odontologico', 'Tabaco', 'Diabetes', 'Presion_Arterial'];
+        const alertasOdonto = (alertasData.alertas || []).filter(a =>
+            camposOdonto.includes(a.campo) || !a.campo
+        );
+
+        if (alertasOdonto.length > 0) {
+            let alertaBox = document.getElementById('alertas-odonto');
+            if (!alertaBox) {
+                alertaBox = document.createElement('div');
+                alertaBox.id = 'alertas-odonto';
+                alertaBox.style.cssText = 'margin-top:12px; border-radius:8px; overflow:hidden;';
+                msgEl.parentNode.appendChild(alertaBox);
+            }
+            let html = '<div style="background:#fffbeb; border-left:4px solid #d97706; padding:10px 14px;">';
+            html += '<p style="font-size:12px; font-weight:700; color:#92400e; margin-bottom:6px;"><i class="fas fa-exclamation-triangle" style="margin-right:6px"></i>Alertas clínicas relevantes:</p>';
+            alertasOdonto.forEach(a => {
+                const color = a.tipo === 'URGENTE' ? '#dc2626' : a.tipo === 'RIESGO' ? '#d97706' : '#0448a2';
+                html += `<p style="font-size:12px; color:${color}; margin:3px 0;">${a.mensaje}</p>`;
+            });
+            html += '</div>';
+            alertaBox.innerHTML = html;
+        }
+
+    } catch(e) {
+        msgEl.style.cssText = 'margin-top:8px; padding:10px 14px; border-radius:8px; font-size:13px; font-weight:500; background:#fffbeb; color:#d97706; border:1px solid #fde68a;';
+        msgEl.innerHTML = '<i class="fas fa-exclamation-triangle" style="margin-right:6px"></i>No se pudo verificar. Continuá o consultá a IAPOS.';
+    }
+});
+
     // --- INICIALIZACIÓN ---
     const initForm = () => {
         console.log("Formulario cargado y listo.");

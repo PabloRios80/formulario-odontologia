@@ -16,16 +16,19 @@ const supabase = createClient(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    next();
+});
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta para guardar formulario odontología
+// ── GUARDAR ODONTOLOGÍA ──
 app.post('/guardar-odontologia', upload.none(), async (req, res) => {
     const data = req.body;
     console.log('Datos recibidos:', data);
 
     try {
-        // 1. Guardar en Supabase
-        const { error } = await supabase
+        const { data: insertado, error } = await supabase
             .from('odontologia_consultas')
             .insert({
                 odontologo: data.Odontologo,
@@ -54,17 +57,35 @@ app.post('/guardar-odontologia', upload.none(), async (req, res) => {
                 riesgo_evaluacion: data['RIESGO - Evaluación General'] || data['RIESGO - EvaluaciÃ³n General'],
                 conformidad_cobertura: data['Conformidad con cobertura de su Obra Social'],
                 observaciones: data.Observaciones
-            });
+            })
+            .select()
+            .single();
 
-        if (error) console.error('Error Supabase:', error);
-        else console.log('✅ Odontología guardada en Supabase para DNI:', data.dni);
+        if (error) {
+            console.error('Error Supabase:', error);
+        } else {
+            console.log('✅ Odontología guardada en Supabase para DNI:', data.DNI);
+        }
 
-        // 2. Reenviar a Apps Script para mantener el PDF
+        // Enviar a Apps Script para generar PDF y capturar el link
         try {
             const formData = new URLSearchParams(data).toString();
-            await axios.post(process.env.APPS_SCRIPT_URL, formData, {
+            const appsResponse = await axios.post(process.env.APPS_SCRIPT_URL, formData, {
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             });
+
+            const pdfLink = appsResponse.data?.pdfLink || null;
+            console.log('PDF Link recibido:', pdfLink);
+
+            if (pdfLink && insertado?.id) {
+                const { error: updateError } = await supabase
+                    .from('odontologia_consultas')
+                    .update({ enlace_pdf: pdfLink })
+                    .eq('id', insertado.id);
+
+                if (updateError) console.error('Error actualizando PDF link:', updateError);
+                else console.log('✅ PDF link guardado en Supabase');
+            }
         } catch (e) {
             console.error('Error Apps Script:', e.message);
         }
@@ -77,15 +98,91 @@ app.post('/guardar-odontologia', upload.none(), async (req, res) => {
     }
 });
 
-app.use((req, res, next) => {
-    res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    next();
+// ── VERIFICAR AFILIADO IAPOS ──
+app.get('/verificar-afiliado/:dni', async (req, res) => {
+    const dni = req.params.dni;
+    const hoy = new Date().toISOString().split('T')[0];
+
+    const soapBody = `<?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+        <soap:Body>
+            <BEWsValidaAfi.Execute xmlns="IAPOS_WS">
+                <Usuario>CONSULTAPDP</Usuario>
+                <Passwd>1Qaz</Passwd>
+                <Nafiliado>${dni}</Nafiliado>
+                <Badocnumdo>${dni}</Badocnumdo>
+                <Tidocodigo_de_documento>96</Tidocodigo_de_documento>
+                <Ogorcodigo>1</Ogorcodigo>
+                <Fechpresta>${hoy}</Fechpresta>
+            </BEWsValidaAfi.Execute>
+        </soap:Body>
+    </soap:Envelope>`;
+
+    try {
+        const iaposRes = await axios.post(
+            'https://aswe.santafe.gov.ar/iapos-sw-srvt/servlet/abewsvalidaafi',
+            soapBody,
+            { headers: { 'Content-Type': 'text/xml; charset=utf-8', 'SOAPAction': 'IAPOS_WSaction/ABEWSVALIDAAFI.Execute' }, timeout: 10000 }
+        );
+        const xml = iaposRes.data;
+        const getValor = (tag) => {
+            const match = xml.match(new RegExp(`<${tag}[^>]*>([^<]+)<\/${tag}>`));
+            return match ? match[1].trim() : null;
+        };
+        res.json({
+            esActivo: getValor('Estado') === 'A',
+            nombre: getValor('Apenom'),
+            edad: getValor('Edad'),
+            sexo: getValor('Sexo'),
+            localidad: getValor('Localidad'),
+            fechaNac: getValor('Fechanac')
+        });
+    } catch(e) {
+        console.error('Error IAPOS:', e.message);
+        res.json({ esActivo: false, nombre: null });
+    }
 });
 
-app.post('/guardar-odontologia', upload.none(), async (req, res) => {
-    const data = req.body;
-    console.log('Datos recibidos:', JSON.stringify(data, null, 2));
-    res.json({ result: 'success' });
+// ── CARGAR DATOS PACIENTE + ALERTAS ──
+app.post('/cargar-datos-paciente', async (req, res) => {
+    const { dni } = req.body;
+    if (!dni) return res.status(400).json({ error: 'DNI requerido.' });
+
+    const { data: afiliado } = await supabase
+        .from('afiliados').select('*').eq('dni', dni).single();
+
+    const { data: ultimoDP } = await supabase
+        .from('historial_dia_preventivo')
+        .select('fechax, cancer_cervico_hpv, somf, dislipemias, diabetes, presion_arterial')
+        .eq('dni', dni).order('fechax', { ascending: false }).limit(1).maybeSingle();
+
+    const { data: enfermeria } = await supabase
+        .from('enfermeria_consultas')
+        .select('presion_arterial, peso_kg, altura_cm')
+        .eq('dni', dni).order('fecha_cierre_enf', { ascending: false }).limit(1).maybeSingle();
+
+    const alertas = [];
+
+    if (afiliado?.hipertension === 'si') alertas.push({ tipo: 'RIESGO', campo: 'Presion_Arterial', mensaje: '⚠️ Declara hipertensión en hoja de vida' });
+    if (afiliado?.diabetes === 'si') alertas.push({ tipo: 'RIESGO', campo: 'Diabetes', mensaje: '⚠️ Declara diabetes en hoja de vida' });
+    if (afiliado?.fuma && afiliado.fuma !== 'nunca') alertas.push({ tipo: 'INFO', campo: 'Tabaco', mensaje: `ℹ️ Fumador declarado: ${afiliado.fuma}` });
+    if (afiliado?.cancer_de_colon === 'si') alertas.push({ tipo: 'RIESGO', campo: 'Control_odontologico', mensaje: '⚠️ Antecedente familiar de cáncer — mayor riesgo cáncer oral' });
+    if (afiliado?.depresion === 'si') alertas.push({ tipo: 'INFO', campo: 'Control_odontologico', mensaje: 'ℹ️ Declara depresión — posible bruxismo o descuido bucal' });
+
+    if (enfermeria?.presion_arterial) {
+        const partes = enfermeria.presion_arterial.split('/');
+        if (partes.length === 2) {
+            const sist = parseInt(partes[0]);
+            const diast = parseInt(partes[1]);
+            if (sist >= 140 || diast >= 90)
+                alertas.push({ tipo: 'URGENTE', campo: 'Presion_Arterial', mensaje: `🔴 Enfermería registró TA elevada: ${enfermeria.presion_arterial} mmHg` });
+        }
+    }
+
+    if (ultimoDP?.cancer_cervico_hpv === 'Patologico')
+        alertas.push({ tipo: 'URGENTE', campo: 'Control_odontologico', mensaje: '🔴 HPV Patológico en DP anterior' });
+
+    res.json({ success: true, afiliado, alertas });
 });
 
 app.listen(PORT, () => console.log(`Odontología corriendo en http://localhost:${PORT}`));
