@@ -7,10 +7,22 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
+    <script>
+  (function() {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    if (!token) { window.location.href = 'https://acceso.diapreventivoiapos.com'; return; }
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      if (Date.now() >= payload.exp * 1000) { window.location.href = 'https://acceso.diapreventivoiapos.com'; return; }
+      window.dpProfesional = payload.nombre;
+    } catch(e) { window.location.href = 'https://acceso.diapreventivoiapos.com'; }
+  })();
+</script>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen">
 
-    <header class="bg-blue-600 text-white shadow-lg">
+    <header class="text-white shadow-lg" style="background-color:#014189; border-bottom:4px solid #00A8E7;"></header>
         <div class="container mx-auto px-4 py-4">
             <div class="flex items-center space-x-4">
                 <div class="bg-blue-500 rounded-full p-2"> 

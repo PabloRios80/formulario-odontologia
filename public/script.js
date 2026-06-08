@@ -208,12 +208,18 @@ dniInput.addEventListener('blur', async function() {
     }
 });
 
-    // --- INICIALIZACIÓN ---
     const initForm = () => {
         console.log("Formulario cargado y listo.");
         setTodayDate();
-        showStep(currentStep); // Mostramos el primer paso y ajustamos botones/progreso
-    };
+        // Setear profesional desde JWT
+        const odontologoInput = document.getElementById('odontologo');
+        if (window.dpProfesional && odontologoInput) {
+            odontologoInput.value = window.dpProfesional;
+            odontologoInput.setAttribute('readonly', true);
+            odontologoInput.classList.add('bg-gray-100');
+        }
+        showStep(currentStep);
+    }
 
     initForm();
 
