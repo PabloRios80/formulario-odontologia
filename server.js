@@ -17,6 +17,10 @@ const supabase = createClient(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
+    req.setEncoding('utf8');
+    next();
+});
+app.use((req, res, next) => {
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     next();
 });
@@ -25,6 +29,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ── GUARDAR ODONTOLOGÍA ──
 app.post('/guardar-odontologia', upload.none(), async (req, res) => {
     const data = req.body;
+    console.log('RIESGO recibido:', JSON.stringify(Object.keys(data).filter(k => k.includes('RIESGO'))));
+    console.log('VALOR RIESGO:', data['RIESGO - Evaluación General'], '||', data['RIESGO - EvaluaciÃ³n General']);
     console.log('Datos recibidos:', data);
 
     try {
@@ -69,7 +75,11 @@ app.post('/guardar-odontologia', upload.none(), async (req, res) => {
 
         // Enviar a Apps Script para generar PDF y capturar el link
         try {
-            const formData = new URLSearchParams(data).toString();
+            const dataParaAppsScript = {
+                ...data,
+                'RIESGO - Evaluación General': data['RIESGO - Evaluación General'] || data['RIESGO - EvaluaciÃ³n General'],
+            };
+            const formData = new URLSearchParams(dataParaAppsScript).toString();
             const appsResponse = await axios.post(process.env.APPS_SCRIPT_URL, formData, {
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             });
