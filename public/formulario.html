@@ -78,15 +78,16 @@
                         <h2 class="text-2xl font-bold text-blue-800 mb-6 text-center">Paso 2: Anamnesis</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                            <div>
-                                <label for="fuma" class="block text-sm font-medium text-gray-700">¿Fuma?</label>
-                                <select id="fuma" name="Fuma" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-2 border-blue-400 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 sm:text-sm rounded-md font-medium"
-                                    <option value="">Seleccione una opción</option>
-                                    <option value="No">No</option>
-                                    <option value="SI">Sí</option>
-                                    <option value="Ex fumador">Ex fumador</option>
-                                </select>
-                            </div>
+                        <div style="position:relative; border: 2px solid #2563eb; border-radius: 6px; background:#eff6ff; overflow:hidden;">
+                            <select id="fuma" name="Fuma" required 
+                                style="width:100%; padding:8px 36px 8px 12px; appearance:none; -webkit-appearance:none; background:transparent; border:none; outline:none; font-size:14px; color:#1e3a5f; cursor:pointer;">
+                                <option value="">Seleccione una opción</option>
+                                <option value="No">No</option>
+                                <option value="SI">Sí</option>
+                                <option value="Ex fumador">Ex fumador</option>
+                            </select>
+                            <div style="position:absolute; right:10px; top:50%; transform:translateY(-50%); pointer-events:none; color:#2563eb;">▼</div>
+                        </div>
 
                             <div>
                                 <label for="cancer-oral" class="block text-sm font-medium text-gray-700">Antecedentes de cáncer oral</label>
