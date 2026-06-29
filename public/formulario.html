@@ -39,63 +39,72 @@
                                 <input type="text" id="odontologo" name="Odontologo" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                             </div>
 
-                        <div>
+                            <div>
                                 <label for="fecha" class="block text-sm font-medium text-gray-700">Fecha de Registro</label>
                                 <input type="date" id="fecha" name="Fecha" readonly class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-gray-100">
-                        </div>
+                            </div>
 
-                        <div>
+                            <div>
                                 <label for="dni" class="block text-sm font-medium text-gray-700">DNI del Paciente</label>
                                 <input type="number" id="dni" name="DNI" required pattern="\d{7,8}" title="El DNI debe tener entre 7 y 8 dígitos." class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
+                            </div>
 
-                        <div>
+                            <div>
                                 <label for="apellido" class="block text-sm font-medium text-gray-700">Apellido</label>
                                 <input type="text" id="apellido" name="Apellido" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
+                            </div>
 
-                        <div>
+                            <div>
                                 <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
                                 <input type="text" id="nombre" name="Nombre" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
+                            </div>
 
-                        <div>
+                            <div>
                                 <label for="edad" class="block text-sm font-medium text-gray-700">Edad</label>
                                 <input type="number" id="edad" name="Edad" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
+                            </div>
 
-                        <div>
+                            <div>
                                 <label for="sexo" class="block text-sm font-medium text-gray-700">Sexo</label>
-                                <select id="sexo" name="Sexo" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base rounded-md sm:text-sm" style="border: 2px solid #2563eb; background-color: #eff6ff; appearance: none; -webkit-appearance: none; background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22 fill=%22%232563eb%22><path fill-rule=%22evenodd%22 d=%22M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z%22 clip-rule=%22evenodd%22/></svg>'); background-repeat: no-repeat; background-position: right 10px center; background-size: 16px;"                                  <option value="">Seleccione una opción</option>
-                                    <option value="Femenino">Femenino</option>
-                                    <option value="Masculino">Masculino</option>
-                                </select>
+                                <div class="mt-1 relative border border-gray-300 rounded-md shadow-sm bg-white overflow-hidden">
+                                    <select id="sexo" name="Sexo" required class="block w-full pl-3 pr-10 py-2 text-base border-none outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm bg-transparent appearance-none -webkit-appearance-none">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="Femenino">Femenino</option>
+                                        <option value="Masculino">Masculino</option>
+                                    </select>
+                                    <div class="absolute right-3 top-50 pointer-events-none text-blue-600 text-xs" style="transform: translateY(-50%); top: 50%;">▼</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
                     <div id="step-2" class="form-step hidden">
                         <h2 class="text-2xl font-bold text-blue-800 mb-6 text-center">Paso 2: Anamnesis</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                        <div style="position:relative; border: 2px solid #2563eb; border-radius: 6px; background:#eff6ff; overflow:hidden;">
-                            <select id="fuma" name="Fuma" required 
-                                style="width:100%; padding:8px 36px 8px 12px; appearance:none; -webkit-appearance:none; background:transparent; border:none; outline:none; font-size:14px; color:#1e3a5f; cursor:pointer;">
-                                <option value="">Seleccione una opción</option>
-                                <option value="No">No</option>
-                                <option value="SI">Sí</option>
-                                <option value="Ex fumador">Ex fumador</option>
-                            </select>
-                            <div style="position:absolute; right:10px; top:50%; transform:translateY(-50%); pointer-events:none; color:#2563eb;">▼</div>
-                        </div>
+                            <div>
+                                <label for="fuma" class="block text-sm font-medium text-gray-700">¿Fuma?</label>
+                                <div class="mt-1 relative border border-gray-300 rounded-md shadow-sm bg-white overflow-hidden">
+                                    <select id="fuma" name="Fuma" required class="block w-full pl-3 pr-10 py-2 text-base border-none outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm bg-transparent appearance-none -webkit-appearance-none">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="No">No</option>
+                                        <option value="SI">Sí</option>
+                                        <option value="Ex fumador">Ex fumador</option>
+                                    </select>
+                                    <div class="absolute right-3 top-50 pointer-events-none text-blue-600 text-xs" style="transform: translateY(-50%); top: 50%;">▼</div>
+                                </div>
+                            </div>
 
                             <div>
                                 <label for="cancer-oral" class="block text-sm font-medium text-gray-700">Antecedentes de cáncer oral</label>
-                                <select id="cancer-oral" name="Antecedentes de cáncer oral" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-2 border-blue-400 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 sm:text-sm rounded-md font-medium"
-                                    <option value="">Seleccione una opción</option>
-                                    <option value="No">No</option>
-                                    <option value="Si">Sí</option>
-                                </select>
+                                <div class="mt-1 relative border border-gray-300 rounded-md shadow-sm bg-white overflow-hidden">
+                                    <select id="cancer-oral" name="Antecedentes de cáncer oral" required class="block w-full pl-3 pr-10 py-2 text-base border-none outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm bg-transparent appearance-none -webkit-appearance-none">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="No">No</option>
+                                        <option value="Si">Sí</option>
+                                    </select>
+                                    <div class="absolute right-3 top-50 pointer-events-none text-blue-600 text-xs" style="transform: translateY(-50%); top: 50%;">▼</div>
+                                </div>
                             </div>
 
                             <div class="col-span-1 md:col-span-2">
@@ -114,128 +123,152 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div id="step-3" class="form-step hidden">
-                    <h2 class="text-2xl font-bold text-blue-800 mb-6 text-center">Paso 3: Examen Clínico</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div id="step-3" class="form-step hidden">
+                        <h2 class="text-2xl font-bold text-blue-800 mb-6 text-center">Paso 3: Examen Clínico</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                        <div class="col-span-1 md:col-span-2">
-                            <label for="examen-extraoral" class="block text-sm font-medium text-gray-700">Examen extraoral</label>
-                            <textarea id="examen-extraoral" name="Examen extraoral" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
-                        </div>
+                            <div class="col-span-1 md:col-span-2">
+                                <label for="examen-extraoral" class="block text-sm font-medium text-gray-700">Examen extraoral</label>
+                                <textarea id="examen-extraoral" name="Examen extraoral" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                            </div>
 
-                        <div class="col-span-1 md:col-span-2">
-                            <label for="examen-intraoral" class="block text-sm font-medium text-gray-700">Examen intraoral</label>
-                            <textarea id="examen-intraoral" name="Examen intraoral" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
-                        </div>
+                            <div class="col-span-1 md:col-span-2">
+                                <label for="examen-intraoral" class="block text-sm font-medium text-gray-700">Examen intraoral</label>
+                                <textarea id="examen-intraoral" name="Examen intraoral" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                            </div>
 
-                        <div>
-                            <label for="protesis" class="block text-sm font-medium text-gray-700">¿Utiliza prótesis removibles?</label>
-                            <select id="protesis" name="Utiliza prótesis removibles" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-2 border-blue-400 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 sm:text-sm rounded-md font-medium"
-                                <option value="">Seleccione una opción</option>
-                                <option value="Si">Sí</option>
-                                <option value="No">No</option>
-                            </select>
-                        </div>
-        
-                        <div>
-                            <label for="piezas-cariadas" class="block text-sm font-medium text-gray-700">Piezas cariadas</label>
-                            <input type="text" id="piezas-cariadas" name="Piezas cariada" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
+                            <div>
+                                <label for="protesis" class="block text-sm font-medium text-gray-700">¿Utiliza prótesis removibles?</label>
+                                <div class="mt-1 relative border border-gray-300 rounded-md shadow-sm bg-white overflow-hidden">
+                                    <select id="protesis" name="Utiliza prótesis removibles" required class="block w-full pl-3 pr-10 py-2 text-base border-none outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm bg-transparent appearance-none -webkit-appearance-none">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="Si">Sí</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                    <div class="absolute right-3 top-50 pointer-events-none text-blue-600 text-xs" style="transform: translateY(-50%); top: 50%;">▼</div>
+                                </div>
+                            </div>
+            
+                            <div>
+                                <label for="piezas-cariadas" class="block text-sm font-medium text-gray-700">Piezas cariadas</label>
+                                <input type="text" id="piezas-cariadas" name="Piezas cariada" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            </div>
 
-                        <div>
-                            <label for="piezas-perdidas" class="block text-sm font-medium text-gray-700">Piezas perdidas</label>
-                            <input type="text" id="piezas-perdidas" name="Piezas perdidas" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
+                            <div>
+                                <label for="piezas-perdidas" class="block text-sm font-medium text-gray-700">Piezas perdidas</label>
+                                <input type="text" id="piezas-perdidas" name="Piezas perdidas" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            </div>
 
-                        <div>
-                            <label for="piezas-obturadas" class="block text-sm font-medium text-gray-700">Piezas obturadas</label>
-                            <input type="text" id="piezas-obturadas" name="Piezas obturadas" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <div id="step-4" class="form-step hidden">
-                    <h2 class="text-2xl font-bold text-blue-800 mb-6 text-center">Paso 4: Hábitos y Evaluación</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                        <div>
-                            <label for="dieta" class="block text-sm font-medium text-gray-700">Dieta (momentos de azúcar)</label>
-                            <select id="dieta" name="Dieta, momentos de azúcar" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-2 border-blue-400 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 sm:text-sm rounded-md font-medium"
-                                <option value="">Seleccione una opción</option>
-                                <option value="-4">-4</option>
-                                <option value="4 a 6">4 a 6</option>
-                                <option value="+6">+6</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label for="higiene-bucal" class="block text-sm font-medium text-gray-700">Higiene Bucal (placa a simple vista)</label>
-                            <select id="higiene-bucal" name="Higiene Bucal placa a simple vista" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-2 border-blue-400 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 sm:text-sm rounded-md font-medium"
-                                <option value="">Seleccione una opción</option>
-                                <option value="grado 1">Grado 1</option>
-                                <option value="grado 2">Grado 2</option>
-                                <option value="grado 3">Grado 3</option>
-                            </select>
-                        </div>
-        
-                        <div>
-                            <label for="necesidad-protesis" class="block text-sm font-medium text-gray-700">Necesidad de implantes o prótesis</label>
-                            <select id="necesidad-protesis" name="Necesidad de implantes o prótesis" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-2 border-blue-400 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 sm:text-sm rounded-md font-medium"
-                                <option value="">Seleccione una opción</option>
-                                <option value="No">No</option>
-                                <option value="Si">Sí</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label for="ortodoncia" class="block text-sm font-medium text-gray-700">Ortodoncia</label>
-                            <select id="ortodoncia" name="Ortodoncia" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-2 border-blue-400 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 sm:text-sm rounded-md font-medium"
-                                <option value="">Seleccione una opción</option>
-                                <option value="No portador">No portador</option>
-                                <option value="Portador">Portador</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label for="controles" class="block text-sm font-medium text-gray-700">Controles odontológicos</label>
-                            <select id="controles" name="Controles odontológicos" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-2 border-blue-400 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 sm:text-sm rounded-md font-medium"
-                                <option value="">Seleccione una opción</option>
-                                <option value="Regulares">Regulares</option>
-                                <option value="Periodicos">Periódicos</option>
-                                <option value="Escasos o Nulos">Escasos o Nulos</option>
-                            </select>
-                        </div>
-        
-                        <div>
-                            <label for="riesgo" class="block text-sm font-medium text-gray-700">RIESGO - Evaluación General</label>
-                            <select id="riesgo" name="RIESGO - Evaluación General" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-2 border-blue-400 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 sm:text-sm rounded-md font-medium"
-                                <option value="">Seleccione una opción</option>
-                                <option value="Bajo riesgo">Bajo riesgo</option>
-                                <option value="Riesgo medio">Riesgo medio</option>
-                                <option value="Alto riesgo">Alto riesgo</option>
-                            </select>
+                            <div>
+                                <label for="piezas-obturadas" class="block text-sm font-medium text-gray-700">Piezas obturadas</label>
+                                <input type="text" id="piezas-obturadas" name="Piezas obturadas" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div id="step-5" class="form-step hidden">
-                    <h2 class="text-2xl font-bold text-blue-800 mb-6 text-center">Paso 5: Cierre y Observaciones</h2>
-                    <div class="grid grid-cols-1 gap-6">
+                    <div id="step-4" class="form-step hidden">
+                        <h2 class="text-2xl font-bold text-blue-800 mb-6 text-center">Paso 4: Hábitos y Evaluación</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                        <div>
-                            <label for="conformidad-os" class="block text-sm font-medium text-gray-700">Conformidad con cobertura de su Obra Social</label>
-                            <select id="conformidad-os" name="Conformidad con cobertura de su Obra Social" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-2 border-blue-400 bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 sm:text-sm rounded-md font-medium"
-                                <option value="">Seleccione una opción</option>
-                                <option value="Conforme">Conforme</option>
-                                <option value="No conforme">No conforme</option>
-                            </select>
+                            <div>
+                                <label for="dieta" class="block text-sm font-medium text-gray-700">Dieta (momentos de azúcar)</label>
+                                <div class="mt-1 relative border border-gray-300 rounded-md shadow-sm bg-white overflow-hidden">
+                                    <select id="dieta" name="Dieta, momentos de azúcar" required class="block w-full pl-3 pr-10 py-2 text-base border-none outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm bg-transparent appearance-none -webkit-appearance-none">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="-4">-4</option>
+                                        <option value="4 a 6">4 a 6</option>
+                                        <option value="+6">+6</option>
+                                    </select>
+                                    <div class="absolute right-3 top-50 pointer-events-none text-blue-600 text-xs" style="transform: translateY(-50%); top: 50%;">▼</div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="higiene-bucal" class="block text-sm font-medium text-gray-700">Higiene Bucal (placa a simple vista)</label>
+                                <div class="mt-1 relative border border-gray-300 rounded-md shadow-sm bg-white overflow-hidden">
+                                    <select id="higiene-bucal" name="Higiene Bucal placa a simple vista" required class="block w-full pl-3 pr-10 py-2 text-base border-none outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm bg-transparent appearance-none -webkit-appearance-none">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="grado 1">Grado 1</option>
+                                        <option value="grado 2">Grado 2</option>
+                                        <option value="grado 3">Grado 3</option>
+                                    </select>
+                                    <div class="absolute right-3 top-50 pointer-events-none text-blue-600 text-xs" style="transform: translateY(-50%); top: 50%;">▼</div>
+                                </div>
+                            </div>
+            
+                            <div>
+                                <label for="necesidad-protesis" class="block text-sm font-medium text-gray-700">Necesidad de implantes o prótesis</label>
+                                <div class="mt-1 relative border border-gray-300 rounded-md shadow-sm bg-white overflow-hidden">
+                                    <select id="necesidad-protesis" name="Necesidad de implantes o prótesis" required class="block w-full pl-3 pr-10 py-2 text-base border-none outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm bg-transparent appearance-none -webkit-appearance-none">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="No">No</option>
+                                        <option value="Si">Sí</option>
+                                    </select>
+                                    <div class="absolute right-3 top-50 pointer-events-none text-blue-600 text-xs" style="transform: translateY(-50%); top: 50%;">▼</div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="ortodoncia" class="block text-sm font-medium text-gray-700">Ortodoncia</label>
+                                <div class="mt-1 relative border border-gray-300 rounded-md shadow-sm bg-white overflow-hidden">
+                                    <select id="ortodoncia" name="Ortodoncia" required class="block w-full pl-3 pr-10 py-2 text-base border-none outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm bg-transparent appearance-none -webkit-appearance-none">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="No portador">No portador</option>
+                                        <option value="Portador">Portador</option>
+                                    </select>
+                                    <div class="absolute right-3 top-50 pointer-events-none text-blue-600 text-xs" style="transform: translateY(-50%); top: 50%;">▼</div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="controles" class="block text-sm font-medium text-gray-700">Controles odontológicos</label>
+                                <div class="mt-1 relative border border-gray-300 rounded-md shadow-sm bg-white overflow-hidden">
+                                    <select id="controles" name="Controles odontológicos" required class="block w-full pl-3 pr-10 py-2 text-base border-none outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm bg-transparent appearance-none -webkit-appearance-none">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="Regulares">Regulares</option>
+                                        <option value="Periodicos">Periódicos</option>
+                                        <option value="Escasos o Nulos">Escasos o Nulos</option>
+                                    </select>
+                                    <div class="absolute right-3 top-50 pointer-events-none text-blue-600 text-xs" style="transform: translateY(-50%); top: 50%;">▼</div>
+                                </div>
+                            </div>
+            
+                            <div>
+                                <label for="riesgo" class="block text-sm font-medium text-gray-700">RIESGO - Evaluación General</label>
+                                <div class="mt-1 relative border border-gray-300 rounded-md shadow-sm bg-white overflow-hidden">
+                                    <select id="riesgo" name="RIESGO - Evaluación General" required class="block w-full pl-3 pr-10 py-2 text-base border-none outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm bg-transparent appearance-none -webkit-appearance-none">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="Bajo riesgo">Bajo riesgo</option>
+                                        <option value="Riesgo medio">Riesgo medio</option>
+                                        <option value="Alto riesgo">Alto riesgo</option>
+                                    </select>
+                                    <div class="absolute right-3 top-50 pointer-events-none text-blue-600 text-xs" style="transform: translateY(-50%); top: 50%;">▼</div>
+                                </div>
+                            </div>
                         </div>
+                    </div>
 
-                        <div>
-                            <label for="observaciones" class="block text-sm font-medium text-gray-700">Observaciones</label>
-                            <textarea id="observaciones" name="Observaciones" rows="4" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                    <div id="step-5" class="form-step hidden">
+                        <h2 class="text-2xl font-bold text-blue-800 mb-6 text-center">Paso 5: Cierre y Observaciones</h2>
+                        <div class="grid grid-cols-1 gap-6">
+
+                            <div>
+                                <label for="conformidad-os" class="block text-sm font-medium text-gray-700">Conformidad con cobertura de su Obra Social</label>
+                                <div class="mt-1 relative border border-gray-300 rounded-md shadow-sm bg-white overflow-hidden">
+                                    <select id="conformidad-os" name="Conformidad con cobertura de su Obra Social" required class="block w-full pl-3 pr-10 py-2 text-base border-none outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm bg-transparent appearance-none -webkit-appearance-none">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="Conforme">Conforme</option>
+                                        <option value="No conforme">No conforme</option>
+                                    </select>
+                                    <div class="absolute right-3 top-50 pointer-events-none text-blue-600 text-xs" style="transform: translateY(-50%); top: 50%;">▼</div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="observaciones" class="block text-sm font-medium text-gray-700">Observaciones</label>
+                                <textarea id="observaciones" name="Observaciones" rows="4" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -245,7 +278,7 @@
                         <i class="fas fa-arrow-left mr-2"></i>Anterior
                     </button>
                     <button type="button" id="next-step-btn" class="inline-flex justify-center items-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
-                        Siguiente<i class="fas fa-arrow-right ml-2"></i>
+                        Siguiente<i class="fas fa-arrow-right mr-2"></i>
                     </button>
                     <button type="submit" id="submit-btn" class="hidden inline-flex justify-center items-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out">
                         <i class="fas fa-save mr-2"></i>Guardar Registro
@@ -257,28 +290,24 @@
     </main>
 
     <script src="script.js"></script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // 1. Buscamos el nombre guardado
-        const nombreOdontologo = sessionStorage.getItem('odontologo-logueado-nombre');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nombreOdontologo = sessionStorage.getItem('odontologo-logueado-nombre');
 
-        if (nombreOdontologo) {
-            // 2. Buscamos el campo "Odontologo/a a cargo"
-            // El ID de tu campo es "odontologo"
-            const campoNombre = document.getElementById('odontologo'); 
-            
-            if (campoNombre) {
-                // 3. Lo rellenamos y lo bloqueamos
-                campoNombre.value = nombreOdontologo;
-                campoNombre.readOnly = true;
+            if (nombreOdontologo) {
+                const campoNombre = document.getElementById('odontologo'); 
+                if (campoNombre) {
+                    campoNombre.value = nombreOdontologo;
+                    campoNombre.readOnly = true;
+                    campoNombre.classList.add("bg-gray-100");
+                } else {
+                    console.error("Error: No se encontró el campo con id 'odontologo'");
+                }
             } else {
-                console.error("Error: No se encontró el campo con id 'odontologo'");
+                alert("Acceso denegado. Por favor, inicie sesión.");
+                window.location.href = 'login.html';
             }
-        } else {
-            // Si llega sin loguearse, lo sacamos
-            alert("Acceso denegado. Por favor, inicie sesión.");
-            window.location.href = 'login.html'; // Lo mandamos al login
-        }
-    });
-</script>
+        });
+    </script>
 </body>
 </html>
