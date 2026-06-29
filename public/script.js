@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Podríamos añadir un mensaje de error si quisiéramos
       }
     }
-    // Validación piezas dentales (solo en paso 3)
+     // Validación piezas dentales (solo en paso 3)
     if (currentStep === 3) {
       const camposPiezas = [
         "piezas-cariadas",
@@ -88,27 +88,9 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         }
       });
-
-      // Validar que la suma no supere 32
-      const cariadas =
-        parseInt(document.getElementById("piezas-cariadas").value) || 0;
-      const perdidas =
-        parseInt(document.getElementById("piezas-perdidas").value) || 0;
-      const obturadas =
-        parseInt(document.getElementById("piezas-obturadas").value) || 0;
-      if (cariadas + perdidas + obturadas > 32) {
-        isValid = false;
-        ["piezas-cariadas", "piezas-perdidas", "piezas-obturadas"].forEach(
-          (id) => {
-            document.getElementById(id).classList.add("border-red-500");
-          },
-        );
-        alert(
-          "La suma de piezas cariadas, perdidas y obturadas no puede superar 32.",
-        );
-        return;
-      }
     }
+
+
 
     if (!isValid) {
       alert("Por favor, completa todos los campos obligatorios.");
