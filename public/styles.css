@@ -9,22 +9,30 @@ label {
     border-radius: 6px;      /* Bordes un poco más redondeados */
     display: block;
     margin-bottom: 4px;
-}
-/* Selects odontología — borde visible */
+} /* <-- LLAVE CORREGIDA: Ahora el navegador no ignora las reglas de abajo */
+
+/* Fuerza el diseño correcto de los selectores en el formulario */
 #odontologia-form select {
-    border: 2px solid #93c5fd;
-    background-color: #f0f7ff;
-    color: #1e3a5f;
-    font-weight: 500;
+    display: block !important;
+    width: 100% !important;
+    height: 40px !important;
+    border: 2px solid #93c5fd !important; /* Marco azul visible */
+    background-color: #f0f7ff !important; /* Fondo suave */
+    color: #1e3a5f !important;
+    border-radius: 6px !important;
+    padding: 6px 12px !important;
+    margin-top: 4px !important;
+    font-weight: 500 !important;
+    -webkit-appearance: revert !important; /* Recupera la flecha nativa estándar */
+    appearance: revert !important;
 }
 
 #odontologia-form select:focus {
-    border-color: #2563eb;
-    background-color: #fff;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    border-color: #2563eb !important;
+    background-color: #ffffff !important;
+    outline: none !important;
 }
 
 #odontologia-form select option[value=""] {
-    color: #9ca3af;
+    color: #9ca3af !important;
 }
