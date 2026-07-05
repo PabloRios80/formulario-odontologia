@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const dniInput = document.getElementById("dni");
   dniInput.addEventListener("blur", async function () {
     const dni = this.value.trim();
-    if (!/^\d{7,8}$/.test(dni)) return;
+    if (!/^[a-zA-Z]?\d{6,8}$/.test(dni)) return;
 
     // Mensaje de verificación
     let msgEl = document.getElementById("dniMsg");
