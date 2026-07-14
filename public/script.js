@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Podríamos añadir un mensaje de error si quisiéramos
       }
     }
-     // Validación piezas dentales (solo en paso 3)
+    // Validación piezas dentales (solo en paso 3)
     if (currentStep === 3) {
       const camposPiezas = [
         "piezas-cariadas",
@@ -89,8 +89,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
     }
-
-
 
     if (!isValid) {
       alert("Por favor, completa todos los campos obligatorios.");
@@ -132,8 +130,11 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((data) => {
         if (data.result === "success") {
           alert("¡Registro guardado con éxito!");
-          form.reset(); // Limpia el formulario
-          currentStep = 1; // Vuelve al primer paso
+          mostrarSeccionPracticasOdontologia(
+            document.getElementById("dni").value.trim(),
+          );
+          form.reset();
+          currentStep = 1;
           showStep(currentStep);
         } else {
           throw new Error(data.message || "Ocurrió un error desconocido.");
@@ -269,6 +270,65 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     showStep(currentStep);
   };
+  function mostrarSeccionPracticasOdontologia(dni) {
+    let seccion = document.getElementById("seccion-practicas-odonto");
+    if (!seccion) {
+      seccion = document.createElement("div");
+      seccion.id = "seccion-practicas-odonto";
+      seccion.style.cssText =
+        "margin-top:24px; background:white; border-radius:12px; padding:20px; border:2px solid #ea580c;";
+      document.querySelector("main .container").appendChild(seccion);
+    }
+    seccion.innerHTML = `
+    <h3 style="font-size:15px; font-weight:700; color:#9a3412; margin-bottom:12px;">
+      <i class="fas fa-tooth" style="margin-right:6px"></i>Prácticas adicionales realizadas
+    </h3>
+    <p style="font-size:12px; color:#78716c; margin-bottom:14px;">Marcá si además de la consulta se realizó:</p>
+    <div style="display:flex; gap:12px; flex-wrap:wrap;">
+      <button onclick="marcarPracticaOdonto('ens', 'Enseñanza técnica H.O.', this)"
+        style="font-size:13px; padding:10px 18px; border-radius:20px; font-weight:700; border:2px solid #ea580c; cursor:pointer; background:#fff7ed; color:#9a3412;">
+        Enseñanza técnica H.O.
+      </button>
+      <button onclick="marcarPracticaOdonto('fluor', 'Topicación con flúor', this)"
+        style="font-size:13px; padding:10px 18px; border-radius:20px; font-weight:700; border:2px solid #ea580c; cursor:pointer; background:#fff7ed; color:#9a3412;">
+        Topicación con flúor
+      </button>
+    </div>
+    <p id="msg-practica-odonto" style="font-size:12px; margin-top:10px;"></p>
+  `;
+    seccion.dataset.dni = dni;
+    seccion.scrollIntoView({ behavior: "smooth" });
+  }
 
+  async function marcarPracticaOdonto(codigo, etiqueta, btn) {
+    const dni = document.getElementById("seccion-practicas-odonto").dataset.dni;
+    btn.disabled = true;
+    const original = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    try {
+      const res = await fetch(
+        "https://tablero-dia.onrender.com/api/marcar-practica-odontologia",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ dni, codigo }),
+        },
+      );
+      const data = await res.json();
+      if (data.success) {
+        btn.style.background = "#dcfce7";
+        btn.style.borderColor = "#16a34a";
+        btn.style.color = "#15803d";
+        btn.innerHTML = "✓ " + etiqueta;
+      } else {
+        throw new Error(data.message || "Error al guardar");
+      }
+    } catch (e) {
+      document.getElementById("msg-practica-odonto").innerHTML =
+        `<span style="color:#dc2626">Error: ${e.message}</span>`;
+      btn.disabled = false;
+      btn.innerHTML = original;
+    }
+  }
   initForm();
 });
