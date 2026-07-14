@@ -111,6 +111,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // --- LÓGICA DE ENVÍO DEL FORMULARIO ---
   const form = document.getElementById("odontologia-form");
+  document.addEventListener("click", function (e) {
+    const btnPractica = e.target.closest(".btn-practica-odonto");
+    if (btnPractica) {
+      marcarPracticaOdonto(
+        btnPractica.dataset.codigo,
+        btnPractica.dataset.etiqueta,
+        btnPractica,
+      );
+      return;
+    }
+    if (e.target.closest("#btn-finalizar-odonto")) {
+      finalizarOdontologia();
+    }
+  });
 
   form.addEventListener("submit", function (e) {
     e.preventDefault(); // Evita que la página se recargue
@@ -267,60 +281,79 @@ document.addEventListener("DOMContentLoaded", function () {
     showStep(currentStep);
   };
   function mostrarSeccionPracticasOdontologia(dni) {
-  let seccion = document.getElementById('seccion-practicas-odonto');
-  if (!seccion) {
-    seccion = document.createElement('div');
-    seccion.id = 'seccion-practicas-odonto';
-    seccion.style.cssText = 'margin-top:24px; background:white; border-radius:12px; padding:20px; border:2px solid #ea580c;';
-    document.querySelector('main .container').appendChild(seccion);
-  }
-  seccion.innerHTML = `
+    let seccion = document.getElementById("seccion-practicas-odonto");
+    if (!seccion) {
+      seccion = document.createElement("div");
+      seccion.id = "seccion-practicas-odonto";
+      seccion.style.cssText =
+        "margin-top:24px; background:white; border-radius:12px; padding:20px; border:2px solid #ea580c;";
+      document.querySelector("main .container").appendChild(seccion);
+    }
+    seccion.innerHTML = `
+    <p style="font-size:13px; font-weight:700; color:#15803d; margin-bottom:14px;">
+      <i class="fas fa-check-circle" style="margin-right:6px"></i>¡Registro guardado con éxito!
+    </p>
     <h3 style="font-size:15px; font-weight:700; color:#9a3412; margin-bottom:12px;">
       <i class="fas fa-tooth" style="margin-right:6px"></i>Prácticas adicionales realizadas
     </h3>
     <p style="font-size:12px; color:#78716c; margin-bottom:14px;">Marcá si además de la consulta se realizó:</p>
     <div style="display:flex; gap:12px; flex-wrap:wrap;">
-      <button onclick="marcarPracticaOdonto('ens', 'Enseñanza técnica H.O.', this)"
+      <button class="btn-practica-odonto" data-codigo="ens" data-etiqueta="Enseñanza técnica H.O."
         style="font-size:13px; padding:10px 18px; border-radius:20px; font-weight:700; border:2px solid #ea580c; cursor:pointer; background:#fff7ed; color:#9a3412;">
         Enseñanza técnica H.O.
       </button>
-      <button onclick="marcarPracticaOdonto('fluor', 'Topicación con flúor', this)"
+      <button class="btn-practica-odonto" data-codigo="fluor" data-etiqueta="Topicación con flúor"
         style="font-size:13px; padding:10px 18px; border-radius:20px; font-weight:700; border:2px solid #ea580c; cursor:pointer; background:#fff7ed; color:#9a3412;">
         Topicación con flúor
       </button>
     </div>
     <p id="msg-practica-odonto" style="font-size:12px; margin-top:10px;"></p>
+    <button id="btn-finalizar-odonto"
+      style="margin-top:18px; font-size:13px; padding:10px 20px; border-radius:8px; font-weight:700; border:none; cursor:pointer; background:#2563eb; color:white;">
+      <i class="fas fa-check mr-2"></i>Finalizar y cargar próximo paciente
+    </button>
   `;
-  seccion.dataset.dni = dni;
-  seccion.scrollIntoView({ behavior: 'smooth' });
-}
-
-async function marcarPracticaOdonto(codigo, etiqueta, btn) {
-  const dni = document.getElementById('seccion-practicas-odonto').dataset.dni;
-  btn.disabled = true;
-  const original = btn.innerHTML;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-  try {
-    const res = await fetch('https://tablero-dia.onrender.com/api/marcar-practica-odontologia', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ dni, codigo })
-    });
-    const data = await res.json();
-    if (data.success) {
-      btn.style.background = '#dcfce7';
-      btn.style.borderColor = '#16a34a';
-      btn.style.color = '#15803d';
-      btn.innerHTML = '✓ ' + etiqueta;
-    } else {
-      throw new Error(data.message || 'Error al guardar');
-    }
-  } catch (e) {
-    document.getElementById('msg-practica-odonto').innerHTML =
-      `<span style="color:#dc2626">Error: ${e.message}</span>`;
-    btn.disabled = false;
-    btn.innerHTML = original;
+    seccion.dataset.dni = dni;
+    seccion.scrollIntoView({ behavior: "smooth" });
   }
-}
+
+  async function marcarPracticaOdonto(codigo, etiqueta, btn) {
+    const dni = document.getElementById("seccion-practicas-odonto").dataset.dni;
+    btn.disabled = true;
+    const original = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    try {
+      const res = await fetch(
+        "https://tablero-dia.onrender.com/api/marcar-practica-odontologia",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ dni, codigo }),
+        },
+      );
+      const data = await res.json();
+      if (data.success) {
+        btn.style.background = "#dcfce7";
+        btn.style.borderColor = "#16a34a";
+        btn.style.color = "#15803d";
+        btn.innerHTML = "✓ " + etiqueta;
+      } else {
+        throw new Error(data.message || "Error al guardar");
+      }
+    } catch (e) {
+      document.getElementById("msg-practica-odonto").innerHTML =
+        `<span style="color:#dc2626">Error: ${e.message}</span>`;
+      btn.disabled = false;
+      btn.innerHTML = original;
+    }
+  }
+
+  function finalizarOdontologia() {
+    const seccion = document.getElementById("seccion-practicas-odonto");
+    if (seccion) seccion.remove();
+    document.getElementById("odontologia-form").reset();
+    currentStep = 1;
+    showStep(currentStep);
+  }
   initForm();
 });
