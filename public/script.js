@@ -129,13 +129,9 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
         if (data.result === "success") {
-          alert("¡Registro guardado con éxito!");
           mostrarSeccionPracticasOdontologia(
             document.getElementById("dni").value.trim(),
           );
-          form.reset();
-          currentStep = 1;
-          showStep(currentStep);
         } else {
           throw new Error(data.message || "Ocurrió un error desconocido.");
         }
@@ -271,15 +267,14 @@ document.addEventListener("DOMContentLoaded", function () {
     showStep(currentStep);
   };
   function mostrarSeccionPracticasOdontologia(dni) {
-    let seccion = document.getElementById("seccion-practicas-odonto");
-    if (!seccion) {
-      seccion = document.createElement("div");
-      seccion.id = "seccion-practicas-odonto";
-      seccion.style.cssText =
-        "margin-top:24px; background:white; border-radius:12px; padding:20px; border:2px solid #ea580c;";
-      document.querySelector("main .container").appendChild(seccion);
-    }
-    seccion.innerHTML = `
+  let seccion = document.getElementById('seccion-practicas-odonto');
+  if (!seccion) {
+    seccion = document.createElement('div');
+    seccion.id = 'seccion-practicas-odonto';
+    seccion.style.cssText = 'margin-top:24px; background:white; border-radius:12px; padding:20px; border:2px solid #ea580c;';
+    document.querySelector('main .container').appendChild(seccion);
+  }
+  seccion.innerHTML = `
     <h3 style="font-size:15px; font-weight:700; color:#9a3412; margin-bottom:12px;">
       <i class="fas fa-tooth" style="margin-right:6px"></i>Prácticas adicionales realizadas
     </h3>
@@ -296,39 +291,36 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
     <p id="msg-practica-odonto" style="font-size:12px; margin-top:10px;"></p>
   `;
-    seccion.dataset.dni = dni;
-    seccion.scrollIntoView({ behavior: "smooth" });
-  }
+  seccion.dataset.dni = dni;
+  seccion.scrollIntoView({ behavior: 'smooth' });
+}
 
-  async function marcarPracticaOdonto(codigo, etiqueta, btn) {
-    const dni = document.getElementById("seccion-practicas-odonto").dataset.dni;
-    btn.disabled = true;
-    const original = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-    try {
-      const res = await fetch(
-        "https://tablero-dia.onrender.com/api/marcar-practica-odontologia",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ dni, codigo }),
-        },
-      );
-      const data = await res.json();
-      if (data.success) {
-        btn.style.background = "#dcfce7";
-        btn.style.borderColor = "#16a34a";
-        btn.style.color = "#15803d";
-        btn.innerHTML = "✓ " + etiqueta;
-      } else {
-        throw new Error(data.message || "Error al guardar");
-      }
-    } catch (e) {
-      document.getElementById("msg-practica-odonto").innerHTML =
-        `<span style="color:#dc2626">Error: ${e.message}</span>`;
-      btn.disabled = false;
-      btn.innerHTML = original;
+async function marcarPracticaOdonto(codigo, etiqueta, btn) {
+  const dni = document.getElementById('seccion-practicas-odonto').dataset.dni;
+  btn.disabled = true;
+  const original = btn.innerHTML;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  try {
+    const res = await fetch('https://tablero-dia.onrender.com/api/marcar-practica-odontologia', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dni, codigo })
+    });
+    const data = await res.json();
+    if (data.success) {
+      btn.style.background = '#dcfce7';
+      btn.style.borderColor = '#16a34a';
+      btn.style.color = '#15803d';
+      btn.innerHTML = '✓ ' + etiqueta;
+    } else {
+      throw new Error(data.message || 'Error al guardar');
     }
+  } catch (e) {
+    document.getElementById('msg-practica-odonto').innerHTML =
+      `<span style="color:#dc2626">Error: ${e.message}</span>`;
+    btn.disabled = false;
+    btn.innerHTML = original;
   }
+}
   initForm();
 });
