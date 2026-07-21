@@ -124,7 +124,8 @@ app.post("/guardar-odontologia", upload.none(), async (req, res) => {
         await supabase.from("practicas_autorizadas").insert({
           dni: data.DNI,
           descripcion_practica: "Consulta odontológica",
-          estado: "AUTORIZADA",
+          estado: "REALIZADA",
+          fecha_carga: hoy,
           fecha_autorizacion: hoy,
           indicacion_entregada: true,
           nombre_completo: "",
