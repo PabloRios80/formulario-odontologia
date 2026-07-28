@@ -28,6 +28,7 @@
             return;
           }
           window.dpProfesional = payload.nombre + " " + payload.apellido;
+          window.dpIdSedeDp = payload.id_sede_dp || null;
         } catch (e) {
           window.location.href = "https://acceso.diapreventivoiapos.com";
         }

@@ -135,6 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
       '<i class="fas fa-spinner fa-spin mr-2"></i>Guardando...';
 
     const formData = new FormData(form);
+    formData.append("id_sede_dp", window.dpIdSedeDp || "");
 
     fetch(SCRIPT_URL, {
       method: "POST",

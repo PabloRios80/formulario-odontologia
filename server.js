@@ -48,6 +48,7 @@ app.post("/guardar-odontologia", upload.none(), async (req, res) => {
         odontologo: data.Odontologo,
         fecha: data.Fecha,
         dni: data.DNI,
+        id_sede_dp: data.id_sede_dp ? parseInt(data.id_sede_dp) : null,
         apellido: data.Apellido,
         nombre: data.Nombre,
         edad: data.Edad,
