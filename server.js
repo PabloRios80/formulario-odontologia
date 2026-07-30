@@ -230,7 +230,6 @@ app.get("/verificar-afiliado/:dni", async (req, res) => {
     res.json({ esActivo: false, nombre: null });
   }
 });
-
 // ── CARGAR DATOS PACIENTE + ALERTAS ──
 app.post("/cargar-datos-paciente", async (req, res) => {
   const { dni } = req.body;
@@ -241,6 +240,18 @@ app.post("/cargar-datos-paciente", async (req, res) => {
     .select("*")
     .eq("dni", dni)
     .single();
+
+  let menor = null;
+  if (!afiliado) {
+    const { data: afiliadoMenor } = await supabase
+      .from("afiliados_menores")
+      .select("*")
+      .eq("dni", dni)
+      .order("fecha_carga", { ascending: false })
+      .limit(1)
+      .single();
+    menor = afiliadoMenor || null;
+  }
 
   const { data: ultimoDP } = await supabase
     .from("historial_dia_preventivo")
@@ -262,36 +273,70 @@ app.post("/cargar-datos-paciente", async (req, res) => {
 
   const alertas = [];
 
-  if (afiliado?.hipertension === "si")
-    alertas.push({
-      tipo: "RIESGO",
-      campo: "Presion_Arterial",
-      mensaje: "⚠️ Declara hipertensión en hoja de vida",
-    });
-  if (afiliado?.diabetes === "si")
-    alertas.push({
-      tipo: "RIESGO",
-      campo: "Diabetes",
-      mensaje: "⚠️ Declara diabetes en hoja de vida",
-    });
-  if (afiliado?.fuma && afiliado.fuma !== "nunca")
-    alertas.push({
-      tipo: "INFO",
-      campo: "Tabaco",
-      mensaje: `ℹ️ Fumador declarado: ${afiliado.fuma}`,
-    });
-  if (afiliado?.cancer_de_colon === "si")
-    alertas.push({
-      tipo: "RIESGO",
-      campo: "Control_odontologico",
-      mensaje: "⚠️ Antecedente familiar de cáncer — mayor riesgo cáncer oral",
-    });
-  if (afiliado?.depresion === "si")
-    alertas.push({
-      tipo: "INFO",
-      campo: "Control_odontologico",
-      mensaje: "ℹ️ Declara depresión — posible bruxismo o descuido bucal",
-    });
+  if (afiliado) {
+    if (afiliado?.hipertension === "si")
+      alertas.push({
+        tipo: "RIESGO",
+        campo: "Presion_Arterial",
+        mensaje: "⚠️ Declara hipertensión en hoja de vida",
+      });
+    if (afiliado?.diabetes === "si")
+      alertas.push({
+        tipo: "RIESGO",
+        campo: "Diabetes",
+        mensaje: "⚠️ Declara diabetes en hoja de vida",
+      });
+    if (afiliado?.fuma && afiliado.fuma !== "nunca")
+      alertas.push({
+        tipo: "INFO",
+        campo: "Tabaco",
+        mensaje: `ℹ️ Fumador declarado: ${afiliado.fuma}`,
+      });
+    if (afiliado?.cancer_de_colon === "si")
+      alertas.push({
+        tipo: "RIESGO",
+        campo: "Control_odontologico",
+        mensaje: "⚠️ Antecedente familiar de cáncer — mayor riesgo cáncer oral",
+      });
+    if (afiliado?.depresion === "si")
+      alertas.push({
+        tipo: "INFO",
+        campo: "Control_odontologico",
+        mensaje: "ℹ️ Declara depresión — posible bruxismo o descuido bucal",
+      });
+  } else if (menor) {
+    if (menor.tabaco === "si")
+      alertas.push({
+        tipo: "RIESGO",
+        campo: "Tabaco",
+        mensaje: "⚠️ Consume o ha consumido tabaco",
+      });
+    if (menor.fam_cancer === "si")
+      alertas.push({
+        tipo: "RIESGO",
+        campo: "Control_odontologico",
+        mensaje: "⚠️ Antecedente familiar de cáncer — mayor riesgo cáncer oral",
+      });
+    if (menor.tristeza === "si" || menor.atencion_mental === "si")
+      alertas.push({
+        tipo: "INFO",
+        campo: "Control_odontologico",
+        mensaje:
+          "ℹ️ Antecedente de salud mental — posible bruxismo o descuido bucal",
+      });
+    if (menor.alim_trastorno === "si")
+      alertas.push({
+        tipo: "RIESGO",
+        campo: "Control_odontologico",
+        mensaje: "⚠️ Preocupación por alimentación — evaluar erosión dental",
+      });
+    if (menor.condicion_salud === "si")
+      alertas.push({
+        tipo: "URGENTE",
+        campo: "Otros",
+        mensaje: `🔴 Condición de salud diagnosticada${menor.condicion_detalle ? ": " + menor.condicion_detalle : ""}`,
+      });
+  }
 
   if (enfermeria?.presion_arterial) {
     const partes = enfermeria.presion_arterial.split("/");
@@ -314,7 +359,7 @@ app.post("/cargar-datos-paciente", async (req, res) => {
       mensaje: "🔴 HPV Patológico en DP anterior",
     });
 
-  res.json({ success: true, afiliado, alertas });
+  res.json({ success: true, afiliado: afiliado || menor || null, alertas });
 });
 
 app.listen(PORT, () =>
