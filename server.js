@@ -132,7 +132,6 @@ app.post("/guardar-odontologia", upload.none(), async (req, res) => {
           fecha_autorizacion: hoy,
           indicacion_entregada: true,
           nombre_completo: "",
-          nombre_prestador: data.Odontologo || null,
         });
       }
     } catch (e) {
