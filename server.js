@@ -123,6 +123,7 @@ app.post("/guardar-odontologia", upload.none(), async (req, res) => {
         .eq("fecha_autorizacion", hoy)
         .maybeSingle();
 
+      console.log("DEBUG - yaExiste:", !!yaExiste, "| data.Odontologo:", data.Odontologo);
       if (!yaExiste) {
         await supabase.from("practicas_autorizadas").insert({
           dni: data.DNI,
@@ -132,6 +133,7 @@ app.post("/guardar-odontologia", upload.none(), async (req, res) => {
           fecha_autorizacion: hoy,
           indicacion_entregada: true,
           nombre_completo: "",
+          nombre_prestador: data.Odontologo || null,
         });
       }
     } catch (e) {
