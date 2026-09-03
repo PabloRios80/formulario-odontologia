@@ -129,6 +129,38 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener("submit", function (e) {
     e.preventDefault(); // Evita que la página se recargue
 
+    // Revalidar TODOS los campos obligatorios del formulario, sin
+    // importar en qué paso estén — un campo obligatorio que quedó vacío
+    // en un paso ya no visible (display:none) no lo bloquea el atributo
+    // "required" del navegador, así que hay que chequearlo a mano acá.
+    let formularioValido = true;
+    let primerPasoConError = null;
+    document.querySelectorAll("[required]").forEach((campo) => {
+      campo.classList.remove("border-red-500");
+      if (!campo.value.trim()) {
+        formularioValido = false;
+        campo.classList.add("border-red-500");
+        const pasoDelCampo = campo.closest(".form-step");
+        const numeroPaso = pasoDelCampo
+          ? parseInt(pasoDelCampo.id.replace("step-", ""))
+          : null;
+        if (numeroPaso && (primerPasoConError === null || numeroPaso < primerPasoConError)) {
+          primerPasoConError = numeroPaso;
+        }
+      }
+    });
+
+    if (!formularioValido) {
+      alert(
+        "Hay campos obligatorios sin completar (por ejemplo, Apellido o Nombre). Te llevamos al paso donde falta completar algo.",
+      );
+      if (primerPasoConError) {
+        currentStep = primerPasoConError;
+        showStep(currentStep);
+      }
+      return;
+    }
+
     // Muestra un mensaje de "enviando"
     submitBtn.disabled = true;
     submitBtn.innerHTML =
