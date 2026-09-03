@@ -44,6 +44,23 @@ app.post("/guardar-odontologia", upload.none(), async (req, res) => {
   console.log("Datos recibidos:", data);
 
   try {
+    // Evitar duplicar la consulta si ya se guardó una hoy para este DNI
+    // (por ejemplo, si el odontólogo apretó "Guardar" dos veces porque no
+    // vio la confirmación a tiempo).
+    const { data: yaExisteConsulta } = await supabase
+      .from("odontologia_consultas")
+      .select("id")
+      .eq("dni", data.DNI)
+      .eq("fecha", data.Fecha)
+      .maybeSingle();
+
+    if (yaExisteConsulta) {
+      console.log(
+        `⚠️ Consulta odontológica duplicada evitada para DNI ${data.DNI} (ya existía id ${yaExisteConsulta.id})`,
+      );
+      return res.json({ result: "success", yaExistia: true });
+    }
+
     const { data: insertado, error } = await supabase
       .from("odontologia_consultas")
       .insert({

@@ -144,6 +144,11 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
         if (data.result === "success") {
+          // A propósito NO se reactiva el botón acá — queda deshabilitado
+          // con "Guardado" hasta que se cargue el próximo paciente, para
+          // evitar que se reenvíe el mismo formulario por las dudas.
+          submitBtn.innerHTML =
+            '<i class="fas fa-check mr-2"></i>Guardado';
           mostrarSeccionPracticasOdontologia(
             document.getElementById("dni").value.trim(),
           );
@@ -154,9 +159,8 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((error) => {
         console.error("Error:", error);
         alert(`Error al guardar el registro: ${error.message}`);
-      })
-      .finally(() => {
-        // Restaura el botón de guardar
+        // Solo se reactiva el botón si realmente falló, para que puedan
+        // reintentar.
         submitBtn.disabled = false;
         submitBtn.innerHTML =
           '<i class="fas fa-save mr-2"></i>Guardar Registro';
@@ -354,6 +358,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (seccion) seccion.remove();
     document.getElementById("odontologia-form").reset();
     currentStep = 1;
+    // Restaurar el botón de guardar para el próximo paciente
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i>Guardar Registro';
     showStep(currentStep);
   }
   initForm();
