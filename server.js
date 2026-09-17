@@ -145,12 +145,14 @@ app.post("/guardar-odontologia", upload.none(), async (req, res) => {
         await supabase.from("practicas_autorizadas").insert({
           dni: data.DNI,
           descripcion_practica: "Consulta odontológica",
+          codigo_prestacion: "B040102",
           estado: "REALIZADA",
           fecha_carga: hoy,
           fecha_autorizacion: hoy,
           indicacion_entregada: true,
           nombre_completo: "",
           nombre_prestador: data.Odontologo || null,
+          id_sede_dp: data.id_sede_dp ? parseInt(data.id_sede_dp) : null,
         });
       }
     } catch (e) {
