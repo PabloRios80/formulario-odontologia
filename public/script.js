@@ -365,7 +365,12 @@ document.addEventListener("DOMContentLoaded", function () {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ dni, codigo }),
+          body: JSON.stringify({
+            dni,
+            codigo,
+            nombrePrestador: window.dpProfesional || null,
+            id_sede_dp: window.dpIdSedeDp || null,
+          }),
         },
       );
       const data = await res.json();
